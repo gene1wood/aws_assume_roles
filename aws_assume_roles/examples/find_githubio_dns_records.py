@@ -5,12 +5,20 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+# https://help.github.com/articles/troubleshooting-custom-domains/
 GITHUBIO_IPS = ['192.30.252.153',
-                '192.30.252.154']
+                '192.30.252.154',
+                '185.199.108.153',
+                '185.199.109.153',
+                '185.199.110.153',
+                '185.199.111.153',
+                '207.97.227.245',
+                '204.232.175.78'
+                ]
 GITHUBIO_SUFFIX = '.github.io.'
 
 
-def main(arn, credentials={}):
+def main(arn='', credentials={}):
     client = boto3.client('route53', **credentials)
     results = []
     hosted_zone_ids = []
@@ -36,7 +44,7 @@ def main(arn, credentials={}):
                     if 'ResourceRecords' not in record:
                         logging.debug("'ResourceRecords' not found in %s" %
                                       record)
-                        raise Exception()
+                        continue  # Previously we raised an Exception here but I'm not sure why
                     for value in [x['Value']
                                   for x
                                   in record['ResourceRecords']]:
@@ -60,3 +68,7 @@ def main(arn, credentials={}):
                                             'Value': value})
 
     return results
+
+
+if __name__ == "__main__":
+    print(main())
