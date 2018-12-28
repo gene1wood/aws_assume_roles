@@ -53,8 +53,9 @@ def type_method(method):
     try:
         result = getattr(i, method_name)
     except AttributeError:
-        raise argparse.ArgumentTypeError('unable to find method %s in module '
-                                         '%s' % (method_name, module_name))
+        raise argparse.ArgumentTypeError(
+            'unable to find method %s in module %s . found %s' %
+            (method_name, module_name, dir(i)))
     return result
 
 
@@ -100,6 +101,8 @@ def get_args():
     parser.add_argument('--profile', help='AWS credential profile name')
     parser.add_argument('-l', '--loglevel', type=type_loglevel, default='INFO',
                         help='Log level verbosity (default: INFO)')
+    parser.add_argument('--output',
+                        help='Filename to output to instead of stdout')
     args = parser.parse_args()
     logging.basicConfig(level=args.loglevel)
     # Disable boto logging
@@ -125,8 +128,14 @@ def main():
             if 'errors' not in results:
                 results['errors'] = []
             results['errors'].append('Unable to assume_role to %s' % arn)
+        if args.output:
+            with open(args.output, 'w') as f:
+                json.dump(results, f, indent=4)
+            print('{} records collected for {}'.format(len(results[arn]), arn))
 
-    print(json.dumps(results))
+    if not args.output:
+        print(json.dumps(results, indent=4))
+
 
 if __name__ == "__main__":
     main()
