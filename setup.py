@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='aws_assume_roles',
-    version='0.1.11',
+    version='0.2',
     author='Gene Wood',
     author_email='gene_wood@cementhorizon.com',
     packages=['aws_assume_roles'],
