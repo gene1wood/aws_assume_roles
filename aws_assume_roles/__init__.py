@@ -93,16 +93,17 @@ def get_args():
     parser = argparse.ArgumentParser(
         description='Iterate over a set of AWS IAM roles and call an '
                     'arbitrary method with each role')
-    parser.add_argument('method', type=type_method,
-                        help='a dot delimited method name')
-    parser.add_argument('arnfile', nargs='?', type=argparse.FileType('r'),
-                        default=sys.stdin,
-                        help='a filename of a list of ARNs, one per line')
+    parser.add_argument(
+        'method', type=type_method, help='a dot delimited method name')
+    parser.add_argument(
+        'arnfile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+        help='a filename of a list of ARNs, one per line (default : stdin)')
     parser.add_argument('--profile', help='AWS credential profile name')
-    parser.add_argument('-l', '--loglevel', type=type_loglevel, default='INFO',
-                        help='Log level verbosity (default: INFO)')
-    parser.add_argument('--output',
-                        help='Filename to output to instead of stdout')
+    parser.add_argument(
+        '-l', '--loglevel', type=type_loglevel, default='INFO',
+        help='Log level verbosity (default: INFO)')
+    parser.add_argument(
+        '--output', help='Filename to output to instead of stdout')
     args = parser.parse_args()
     logging.basicConfig(level=args.loglevel)
     # Disable boto logging
